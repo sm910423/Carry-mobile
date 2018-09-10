@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#198fc6</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorError">#ff4035</color>
+    <color name="colorAccent">#03ca1e</color>
+    <color name="colorGrayBackground">#f9f9f9</color>
+    <color name="colorTransparent">#00ffffff</color>
+    <color name="colorSemiTransparent">#ccffffff</color>
+    <color name="colorTabsBackground">#374252</color>
+    <color name="colorTabBackground">#3c4758</color>
+    <color name="colorTabCheckedColor">#ffffff</color>
+    <color name="colorTabUncheckedColor">#979ba7</color>
+</resources>

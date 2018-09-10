@@ -1,0 +1,76 @@
+<resources>
+    <string name="app_name">FreightRoll</string>
+    <string name="title_activity_login">LOGIN</string>
+    <string name="title_activity_register">SIGN UP</string>
+    <string name="title_button_back">Back</string>
+    <string name="title_fragment_board">LOAD BOARD</string>
+    <string name="title_fragment_shipments">LIVE SHIPMENTS</string>
+    <string name="title_fragment_messages">MESSAGES</string>
+    <string name="title_fragment_account">ACCOUNT</string>
+
+    <!-- Strings related to the SplashScreen -->
+    <string name="sp_button_register">Create your account</string>
+    <string name="sp_button_login">Login to your account</string>
+    <string name="sp_text_title">Your Digital Freight Partner</string>
+    <string name="sp_text_comment">Lorem ipsum dolor sit amet consectetuer adisciping elitaes aenean.</string>
+
+    <!-- Strings related to the LoginScreen -->
+    <string name="lg_text_title">Welcome Back!</string>
+    <string name="lg_placeholder_email">Email</string>
+    <string name="lg_placeholder_password">Password</string>
+    <string name="lg_button_login">Login</string>
+
+    <!-- Strings related to the SignupScreen -->
+    <string name="rg_text_title">Join FreightRoll</string>
+    <string name="rg_text_comment">Enter your info below and a member of our team will update you when your account is live.</string>
+    <string name="rg_hint_first_name">First Name</string>
+    <string name="rg_hint_last_name">Last Name</string>
+    <string name="rg_hint_mc_number">MC Number</string>
+    <string name="rg_hint_email_address">E-mail Address</string>
+    <string name="rg_hint_password">Password</string>
+    <string name="rg_hint_truck_type">Truck Type</string>
+    <string name="rg_button_register">Create Account</string>
+
+    <!-- Strings related to the tabs navigation -->
+    <string name="nav_load_board">Load Board</string>
+    <string name="nav_live_shipments">Live Shipments</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_account">Account</string>
+
+    <!-- Strings related to the Account Screen -->
+    <string name="as_toggle_pickups">Available for Pickups</string>
+    <string name="as_text_account">Account</string>
+    <string name="as_button_edit">Edit account info</string>
+    <string name="as_button_change_password">Change password</string>
+    <string name="as_button_logout">Log out</string>
+    <string name="as_text_freightroll">FreightRoll</string>
+    <string name="as_button_about">About</string>
+    <string name="as_button_policy">Privacy Policy</string>
+    <string name="as_button_contact">Contact Us</string>
+
+    <!-- Strings related to the Load Board Screen -->
+    <string name="bs_toggle_pickups">Available for Pickups</string>
+    <string name="bs_button_pickup">Desired Pickup</string>
+    <string name="bs_button_destination">Desired Destination</string>
+    <string name="bs_text_no_shipment">There are no shipments right now.</string>
+    <string name="bs_text_trucktype">Truck Type</string>
+    <string name="bs_text_showall">Show All</string>
+    <string name="bs_text_flatbed">Flatbed</string>
+    <string name="bs_text_dryvan">Dry Van</string>
+    <string name="bs_text_stepdeck">Step Deck</string>
+    <string name="bs_text_ltl">LTL</string>
+    <string name="bs_text_cancel">Cancel</string>
+    <string name="bs_text_selectdeadhead">Select DeadHead</string>
+    <string name="bs_50_miles">50 miles</string>
+    <string name="bs_100_miles">100 miles</string>
+    <string name="bs_150_miles">150 miles</string>
+    <string name="bs_200_miles">200 miles</string>
+    <string name="bs_50_mi">50mi</string>
+    <string name="bs_100_mi">100mi</string>
+    <string name="bs_150_mi">150mi</string>
+    <string name="bs_200_mi">200mi</string>
+    <string name="bs_select_pickup_date">Select Pickup Date</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

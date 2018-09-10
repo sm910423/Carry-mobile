@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TabsNavigationActivity">
+
+    <LinearLayout
+        android:id="@+id/nav_tabs"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/colorTabsBackground"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/nav_tab_board_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorTabBackground"
+            android:clickable="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/nav_tab_board_icon"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/board_white" />
+
+            <TextView
+                android:id="@+id/nav_tab_board_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nav_tab_board_icon"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:text="@string/nav_load_board"
+                android:textColor="@color/colorTabCheckedColor"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nav_tab_shipments_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorTabBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/nav_tab_shipments_icon"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/shipments_gray" />
+
+            <TextView
+                android:id="@+id/nav_tab_shipments_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nav_tab_shipments_icon"
+                android:gravity="center"
+                android:text="@string/nav_live_shipments"
+                android:textColor="@color/colorTabUncheckedColor"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nav_tab_messages_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorTabBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/nav_tab_messages_icon"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/messages_gray" />
+
+            <TextView
+                android:id="@+id/nav_tab_messages_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nav_tab_messages_icon"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:text="@string/nav_messages"
+                android:textColor="@color/colorTabUncheckedColor"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nav_tab_account_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorTabBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/nav_tab_account_icon"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/account_gray_on" />
+
+            <TextView
+                android:id="@+id/nav_tab_account_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nav_tab_account_icon"
+                android:gravity="center"
+                android:text="@string/nav_account"
+                android:textColor="@color/colorTabUncheckedColor"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/main_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_tabs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

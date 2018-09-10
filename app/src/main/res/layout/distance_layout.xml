@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_round">
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/transparent_bottom_line_2"
+        android:gravity="center"
+        android:text="@string/bs_text_selectdeadhead"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_show_all"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/textView16"
+        android:background="@drawable/transparent_bottom_line_2"
+        android:text="@string/bs_50_miles"
+        android:textAllCaps="false"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_flatbed"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/btn_show_all"
+        android:background="@drawable/transparent_bottom_line_2"
+        android:text="@string/bs_100_miles"
+        android:textAllCaps="false"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_dry_van"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/btn_flatbed"
+        android:background="@drawable/transparent_bottom_line_2"
+        android:text="@string/bs_150_miles"
+        android:textAllCaps="false"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_step_deck"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/btn_dry_van"
+        android:background="@drawable/transparent_bottom_line_2"
+        android:text="@string/bs_200_miles"
+        android:textAllCaps="false"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/btn_step_deck"
+        android:background="@color/colorTransparent"
+        android:text="@string/bs_text_cancel"
+        android:textSize="14sp" />
+</RelativeLayout>
