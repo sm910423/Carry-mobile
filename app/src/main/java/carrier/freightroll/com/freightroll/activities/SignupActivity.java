@@ -1,4 +1,4 @@
-package carrier.freightroll.com.freightroll;
+package carrier.freightroll.com.freightroll.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import carrier.freightroll.com.freightroll.R;
 
 public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.header_btn_icon_back) ImageButton _backImageButton;

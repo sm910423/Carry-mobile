@@ -1,4 +1,4 @@
-package carrier.freightroll.com.freightroll;
+package carrier.freightroll.com.freightroll.activities;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import carrier.freightroll.com.freightroll.R;
+import carrier.freightroll.com.freightroll.fragments.AccountFragment;
+import carrier.freightroll.com.freightroll.fragments.BoardFragment;
+import carrier.freightroll.com.freightroll.fragments.MessagesFragment;
+import carrier.freightroll.com.freightroll.fragments.ShipmentsFragment;
 
 public class TabsNavigationActivity extends AppCompatActivity {
     private enum TABS { BOARD, SHIPMENTS, MESSAGES, ACCOUNT };

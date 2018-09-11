@@ -1,4 +1,4 @@
-package carrier.freightroll.com.freightroll;
+package carrier.freightroll.com.freightroll.fragments;
 
 
 import android.Manifest;
@@ -40,12 +40,14 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import carrier.freightroll.com.freightroll.R;
+import carrier.freightroll.com.freightroll.helpers.PreferenceManager;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class BoardFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
-    private enum TRUCKTYPES { SHOW_ALL, FLATBED, DRY_VAN, STEP_DECK, LTL }
     private MapView _mapView;
     private GoogleMap _gmap;
     private Marker mMarcadorActual;
@@ -55,7 +57,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     private LinearLayout _btnDate;
     private Dialog _distanceDialog;
     private Dialog _truckDialog;
-    private int _iDistance;
+    private DISTANCES _eDistance;
     private TRUCKTYPES _eTruckType;
     private int _iYear;
     private int _iMonth;
@@ -64,34 +66,12 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
 
     public BoardFragment() {
         // Required empty public constructor
-        _iDistance = 200;
-        _eTruckType = TRUCKTYPES.SHOW_ALL;
-
-        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-        _iYear = cal.get(Calendar.YEAR);
-        _iMonth = cal.get(Calendar.MONTH);
-        _iDay = cal.get(Calendar.DAY_OF_MONTH);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View rootView = inflater.inflate(R.layout.fragment_board, container, false);
-
-        _mapView = rootView.findViewById(R.id.mapView);
-        _mapView.onCreate(savedInstanceState);
-
-        _mapView.onResume(); // needed to get the map to display immediately
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        _mapView.getMapAsync(this);
-
 
         _btnDistance = rootView.findViewById(R.id.ly_distanceLevel);
         _btnDistance.setOnClickListener(this);
@@ -106,7 +86,44 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         _btnDate.setOnClickListener(this);
 
         _txtDate = rootView.findViewById(R.id.txt_date);
+
+        String date = PreferenceManager.getDate(this.getActivity());
+        if (date == null) {
+            Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+            _iYear = cal.get(Calendar.YEAR);
+            _iMonth = cal.get(Calendar.MONTH);
+            _iDay = cal.get(Calendar.DAY_OF_MONTH);
+        } else {
+            String[] values = date.split("-");
+            try {
+                _iYear = Integer.parseInt(values[0]);
+                _iMonth = Integer.parseInt(values[1]);
+                _iDay = Integer.parseInt(values[2]);
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
+        }
         showDate();
+
+        _eDistance = DISTANCES.values()[PreferenceManager.getDistance(getActivity())];
+        setDistanceText(rootView);
+
+        _eTruckType = TRUCKTYPES.values()[PreferenceManager.getTruck(getActivity())];
+        setTruckTypeText(rootView);
+
+        _mapView = rootView.findViewById(R.id.mapView);
+        _mapView.onCreate(savedInstanceState);
+
+        _mapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        _mapView.getMapAsync(this);
+
         return rootView;
     }
 
@@ -174,6 +191,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
             _iMonth = selectedMonth;
             _iDay = selectedDay;
             showDate();
+            String date = String.valueOf(_iYear) + "-" + String.valueOf(_iMonth) + "-" + String.valueOf(_iDay);
+            PreferenceManager.setDate(getActivity(), date);
         }
     };
 
@@ -194,7 +213,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         _distanceDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface d) {
-                setDistanceText();
+                setDistanceText(getView());
+                PreferenceManager.setDistance(getActivity(), _eDistance.getValue());
             }
         });
 
@@ -204,17 +224,17 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         Button btn_150 = _distanceDialog.findViewById(R.id.btn_dry_van);
         Button btn_200 = _distanceDialog.findViewById(R.id.btn_step_deck);
 
-        switch (_iDistance) {
-            case 50:
+        switch (_eDistance) {
+            case D_50:
                 btn_50.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 break;
-            case 100:
+            case D_100:
                 btn_100.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 break;
-            case 150:
+            case D_150:
                 btn_150.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 break;
-            case 200:
+            case D_200:
                 btn_200.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 break;
             default:
@@ -231,7 +251,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_50.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _iDistance = 50;
+                _eDistance = DISTANCES.D_50;
                 _distanceDialog.dismiss();
             }
         });
@@ -239,7 +259,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _iDistance = 100;
+                _eDistance = DISTANCES.D_100;
                 _distanceDialog.dismiss();
             }
         });
@@ -247,7 +267,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_150.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _iDistance = 150;
+                _eDistance = DISTANCES.D_150;
                 _distanceDialog.dismiss();
             }
         });
@@ -255,7 +275,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_200.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _iDistance = 200;
+                _eDistance = DISTANCES.D_200;
                 _distanceDialog.dismiss();
             }
         });
@@ -271,7 +291,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         _truckDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface d) {
-                setTruckTypeText();
+                setTruckTypeText(getView());
+                PreferenceManager.setTruck(getActivity(), _eTruckType.getValue());
             }
         });
 
@@ -365,19 +386,19 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         dp.show();
     }
 
-    public void setDistanceText() {
-        TextView txtView = getActivity().findViewById(R.id.txtDistance);
-        switch (_iDistance) {
-            case 50:
+    public void setDistanceText(View v) {
+        TextView txtView = v.findViewById(R.id.txtDistance);
+        switch (_eDistance) {
+            case D_50:
                 txtView.setText(getResources().getString(R.string.bs_50_mi));
                 break;
-            case 100:
+            case D_100:
                 txtView.setText(getResources().getString(R.string.bs_100_mi));
                 break;
-            case 150:
+            case D_150:
                 txtView.setText(getResources().getString(R.string.bs_150_mi));
                 break;
-            case 200:
+            case D_200:
                 txtView.setText(getResources().getString(R.string.bs_200_mi));
                 break;
             default:
@@ -385,8 +406,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         }
     }
 
-    public void setTruckTypeText() {
-        TextView txtView = getActivity().findViewById(R.id.txtTruckType);
+    public void setTruckTypeText(View v) {
+        TextView txtView = v.findViewById(R.id.txtTruckType);
         switch (_eTruckType) {
             case SHOW_ALL:
                 txtView.setText(getResources().getString(R.string.bs_text_showall));
@@ -407,4 +428,33 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
                 break;
         }
     }
+
+    private enum TRUCKTYPES {
+        SHOW_ALL(0), FLATBED(1), DRY_VAN(2), STEP_DECK(3), LTL(4);
+
+        private final int _value;
+
+        private TRUCKTYPES(int value) {
+            _value = value;
+        }
+
+        public int getValue() {
+            return _value;
+        }
+    }
+
+    private enum DISTANCES {
+        D_200(0), D_150(1), D_100(2), D_50(3);
+
+        private final int _value;
+
+        private DISTANCES(int value) {
+            _value = value;
+        }
+
+        public int getValue() {
+            return _value;
+        }
+    }
+
 }

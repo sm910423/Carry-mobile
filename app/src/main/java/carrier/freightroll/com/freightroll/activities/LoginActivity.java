@@ -1,7 +1,8 @@
-package carrier.freightroll.com.freightroll;
+package carrier.freightroll.com.freightroll.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,9 +19,12 @@ import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import carrier.freightroll.com.freightroll.R;
 import carrier.freightroll.com.freightroll.api.APIInterface;
 import carrier.freightroll.com.freightroll.api.APIManager;
 import carrier.freightroll.com.freightroll.app.EndPoints;
+import carrier.freightroll.com.freightroll.helpers.PreferenceManager;
+import carrier.freightroll.com.freightroll.models.AuthModel;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "zzz LoginActivity";
@@ -67,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login() {
         if (!validate()) {
-            onLoginFailed();
+//            onLoginFailed("");
             return;
         }
 
@@ -90,15 +94,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(JSONObject response) throws JSONException {
                 progressDialog.dismiss();
-                onLoginSuccess();
+                onLoginSuccess(response);
             }
 
             @Override
             public void onFailure(JSONObject response) throws JSONException {
                 progressDialog.dismiss();
-                Toast toast = Toast.makeText(getApplicationContext(), response.get("errorString").toString(), Toast.LENGTH_LONG);
-                toast.show();
-                _loginButton.setEnabled(true);
+                onLoginFailed(response.get("errorString").toString());
             }
         });
     }
@@ -121,8 +123,15 @@ public class LoginActivity extends AppCompatActivity {
 //        moveTaskToBack(true);
 //    }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(JSONObject response) throws JSONException {
+        AuthModel model = new AuthModel();
+        model.setUserId(response.getInt("user_id"));
+        model.setToken(response.getString("auth_token"));
+
+        PreferenceManager.setProfile(LoginActivity.this, model);
+
         _loginButton.setEnabled(true);
+
         Intent intent = new Intent(LoginActivity.this, TabsNavigationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
@@ -131,9 +140,8 @@ public class LoginActivity extends AppCompatActivity {
 //        finish();
     }
 
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+    public void onLoginFailed(String errorString) {
+        Toast.makeText(getBaseContext(), errorString, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 
