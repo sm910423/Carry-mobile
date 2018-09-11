@@ -11,8 +11,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import carrier.freightroll.com.freightroll.api.APIInterface;
+import carrier.freightroll.com.freightroll.api.APIManager;
+import carrier.freightroll.com.freightroll.app.EndPoints;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "zzz LoginActivity";
@@ -58,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
-        Log.d(TAG, "Login");
-
         if (!validate()) {
             onLoginFailed();
             return;
@@ -75,17 +81,26 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
+        RequestParams params = new RequestParams();
+        params.put("email", email);
+        params.put("password", password);
 
-        new android.os.Handler().postDelayed(
-            new Runnable() {
-                public void run() {
-                    // On complete call either onLoginSuccess or onLoginFailed
-                    onLoginSuccess();
-                    // onLoginFailed();
-                    progressDialog.dismiss();
-                }
-            }, 3000);
+        // TODO: Implement your own authentication logic here.
+        APIManager.getDataFromServer(EndPoints.LOGIN, params, new APIInterface() {
+            @Override
+            public void onSuccess(JSONObject response) throws JSONException {
+                progressDialog.dismiss();
+                onLoginSuccess();
+            }
+
+            @Override
+            public void onFailure(JSONObject response) throws JSONException {
+                progressDialog.dismiss();
+                Toast toast = Toast.makeText(getApplicationContext(), response.get("errorString").toString(), Toast.LENGTH_LONG);
+                toast.show();
+                _loginButton.setEnabled(true);
+            }
+        });
     }
 
     @Override

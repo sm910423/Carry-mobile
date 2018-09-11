@@ -13,9 +13,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ///test code
-        Intent intent = new Intent(MainActivity.this, TabsNavigationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        this.startActivity(intent);
+//        Intent intent = new Intent(MainActivity.this, TabsNavigationActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        this.startActivity(intent);
     }
 
     public void goToLogin(View v) {
