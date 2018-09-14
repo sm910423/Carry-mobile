@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/splash_background"
     android:padding="20dp"
-    tools:context="carrier.freightroll.com.freightroll.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <ImageView
         android:layout_width="wrap_content"

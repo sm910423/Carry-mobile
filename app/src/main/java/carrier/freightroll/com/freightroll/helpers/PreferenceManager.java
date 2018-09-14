@@ -16,6 +16,9 @@ public class PreferenceManager {
     private static final String KEY_DISTANCE = "KEY_DISTANCE";
     private static final String KEY_TRUCK = "KEY_TRUCK";
     private static final String KEY_DATE = "KEY_DATE";
+    private static final String KEY_POSITION_LAT = "KEY_POSITION_LAT";
+    private static final String KEY_POSITION_LNG = "KEY_POSITION_LNG";
+    private static final String KEY_POSITION_LABEL = "KEY_POSITION_LABEL";
 
     public static String getToken(Context mContext) {
         mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_USER_INFO, Context.MODE_PRIVATE);
@@ -94,6 +97,42 @@ public class PreferenceManager {
         mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(KEY_DATE, date);
+        editor.apply();
+    }
+
+    public static float getPositionLat(Context mContext) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        return  mSharedPreferences.getFloat(KEY_POSITION_LAT, -1000);
+    }
+
+    public static void setPositionLat(Context mContext, float lat) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putFloat(KEY_POSITION_LAT, lat);
+        editor.apply();
+    }
+
+    public static float getPositionLng(Context mContext) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        return mSharedPreferences.getFloat(KEY_POSITION_LNG, -1000);
+    }
+
+    public static void setPositionLng(Context mContext, float lng) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putFloat(KEY_POSITION_LNG, lng);
+        editor.apply();
+    }
+
+    public static String getPositionLabel(Context mContext) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        return  mSharedPreferences.getString(KEY_POSITION_LABEL, null);
+    }
+
+    public static void setPositionLabel(Context mContext, String label) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(KEY_POSITION_LABEL, label);
         editor.apply();
     }
 

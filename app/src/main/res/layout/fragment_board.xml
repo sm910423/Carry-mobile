@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentTop="false"
-    tools:context=".BoardFragment">
+    tools:context=".fragments.BoardFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -180,7 +180,7 @@
                                     android:src="@drawable/pickup_location" />
 
                                 <TextView
-                                    android:id="@+id/textView6"
+                                    android:id="@+id/txt_position"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
@@ -226,7 +226,7 @@
                             android:orientation="vertical">
 
                             <Switch
-                                android:id="@+id/switch1"
+                                android:id="@+id/switch_pickups"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bs_bottom_panel"

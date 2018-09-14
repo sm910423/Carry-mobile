@@ -6,12 +6,14 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,16 +21,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,6 +50,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import carrier.freightroll.com.freightroll.R;
+import carrier.freightroll.com.freightroll.activities.LoginActivity;
+import carrier.freightroll.com.freightroll.activities.PickupActivity;
+import carrier.freightroll.com.freightroll.activities.TabsNavigationActivity;
 import carrier.freightroll.com.freightroll.helpers.PreferenceManager;
 
 
@@ -48,9 +60,9 @@ import carrier.freightroll.com.freightroll.helpers.PreferenceManager;
  * A simple {@link Fragment} subclass.
  */
 public class BoardFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+    private static final float MI_TO_METER = 1609.34f;
     private MapView _mapView;
     private GoogleMap _gmap;
-    private Marker mMarcadorActual;
     private LinearLayout _btnDistance;
     private RelativeLayout _btnTruckType;
     private LinearLayout _btnPosition;
@@ -63,6 +75,10 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     private int _iMonth;
     private int _iDay;
     private TextView _txtDate;
+    private TextView _txtPosition;
+    private String _strPosition;
+    private LatLng _currentPosition;
+    private Switch _btn_pickups;
 
     public BoardFragment() {
         // Required empty public constructor
@@ -81,6 +97,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
 
         _btnPosition = rootView.findViewById(R.id.ly_position);
         _btnPosition.setOnClickListener(this);
+
+        _txtPosition = rootView.findViewById(R.id.txt_position);
 
         _btnDate = rootView.findViewById(R.id.ly_date);
         _btnDate.setOnClickListener(this);
@@ -124,28 +142,23 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
 
         _mapView.getMapAsync(this);
 
+        _btn_pickups = (Switch) rootView.findViewById(R.id.switch_pickups);
+        _btn_pickups.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getAllPickups(isChecked);
+            }
+        });
         return rootView;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         _gmap = googleMap;
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        _gmap.setMyLocationEnabled(true);
         _gmap.setMinZoomPreference(3);
-        LatLng ny = new LatLng(40.7143528, -74.0059731);
+        LatLng ny = new LatLng(41.850033, -92.0500523);
         _gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
-        LatLng sydney = new LatLng(-34, 151);
-        mMarcadorActual = _gmap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+
+        addMarker();
     }
 
     @Override
@@ -157,6 +170,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     @Override
     public void onResume() {
         super.onResume();
+        setPosition();
+        addMarker();
         _mapView.onResume();
     }
 
@@ -179,7 +194,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         } else if (v == _btnTruckType) {
             showTruckDialog();
         } else if (v == _btnPosition) {
-
+            goToPickupActivity();
         } else if (v == _btnDate) {
             showDateDialog();
         }
@@ -187,12 +202,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-            _iYear = selectedYear;
-            _iMonth = selectedMonth;
-            _iDay = selectedDay;
-            showDate();
-            String date = String.valueOf(_iYear) + "-" + String.valueOf(_iMonth) + "-" + String.valueOf(_iDay);
-            PreferenceManager.setDate(getActivity(), date);
+            setDate(selectedYear, selectedMonth, selectedDay);
         }
     };
 
@@ -208,7 +218,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         _distanceDialog.setContentView(R.layout.distance_layout);
         _distanceDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         _distanceDialog.setTitle("Custom Alert Dialog");
-        _distanceDialog.setCancelable(false);
+//        _distanceDialog.setCancelable(false);
         _distanceDialog.show();
         _distanceDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -251,32 +261,28 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_50.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eDistance = DISTANCES.D_50;
-                _distanceDialog.dismiss();
+                setDistance(DISTANCES.D_50);
             }
         });
 
         btn_100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eDistance = DISTANCES.D_100;
-                _distanceDialog.dismiss();
+                setDistance(DISTANCES.D_100);
             }
         });
 
         btn_150.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eDistance = DISTANCES.D_150;
-                _distanceDialog.dismiss();
+                setDistance(DISTANCES.D_150);
             }
         });
 
         btn_200.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eDistance = DISTANCES.D_200;
-                _distanceDialog.dismiss();
+                setDistance(DISTANCES.D_200);
             }
         });
     }
@@ -286,7 +292,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         _truckDialog.setContentView(R.layout.truck_layout);
         _truckDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         _truckDialog.setTitle("Custom Alert Dialog");
-        _truckDialog.setCancelable(false);
+//        _truckDialog.setCancelable(false);
         _truckDialog.show();
         _truckDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -333,42 +339,57 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_show_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eTruckType = TRUCKTYPES.SHOW_ALL;
-                _truckDialog.dismiss();
+                setTruckType(TRUCKTYPES.SHOW_ALL);
             }
         });
 
         btn_flatbed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eTruckType = TRUCKTYPES.FLATBED;
-                _truckDialog.dismiss();
+                setTruckType(TRUCKTYPES.FLATBED);
             }
         });
 
         btn_dry_van.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eTruckType = TRUCKTYPES.DRY_VAN;
-                _truckDialog.dismiss();
+                setTruckType(TRUCKTYPES.DRY_VAN);
             }
         });
 
         btn_step_deck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eTruckType = TRUCKTYPES.STEP_DECK;
-                _truckDialog.dismiss();
+                setTruckType(TRUCKTYPES.STEP_DECK);
             }
         });
 
         btn_ltl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _eTruckType = TRUCKTYPES.LTL;
-                _truckDialog.dismiss();
+                setTruckType(TRUCKTYPES.LTL);
             }
         });
+    }
+
+    public void setDate(int year, int month, int day) {
+        _iYear = year;
+        _iMonth = month;
+        _iDay = day;
+        showDate();
+        String date = String.valueOf(_iYear) + "-" + String.valueOf(_iMonth) + "-" + String.valueOf(_iDay);
+        PreferenceManager.setDate(getActivity(), date);
+    }
+
+    public void setDistance(DISTANCES d) {
+        _eDistance = d;
+        addMarker();
+        _distanceDialog.dismiss();
+    }
+
+    public void setTruckType(TRUCKTYPES t) {
+        _eTruckType = t;
+        _truckDialog.dismiss();
     }
 
     public void showDateDialog() {
@@ -426,6 +447,85 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
                 break;
             default:
                 break;
+        }
+    }
+
+    public void goToPickupActivity() {
+        Intent intent = new Intent(getActivity(), PickupActivity.class);
+        intent.putExtra("cur_lat", _currentPosition == null ? null : _currentPosition.latitude);
+        intent.putExtra("cur_lng", _currentPosition == null ? null : _currentPosition.longitude);
+        intent.putExtra("label", _strPosition);
+        this.startActivity(intent);
+    }
+
+    public void setPosition() {
+        float lat = PreferenceManager.getPositionLat(getActivity());
+        float lng = PreferenceManager.getPositionLng(getActivity());
+
+        if (lat == -1000) {
+            _currentPosition = null;
+        } else {
+            _currentPosition = new LatLng(lat, lng);
+        }
+
+        _strPosition = PreferenceManager.getPositionLabel(getActivity());
+        if (_strPosition != null) {
+            _txtPosition.setText(_strPosition);
+        }
+    }
+
+    public void addMarker() {
+        if (_gmap == null) return;
+        _gmap.clear();
+
+        if (_currentPosition == null) return;
+
+        CircleOptions optCircle = new CircleOptions();
+        optCircle.center(_currentPosition);
+        if (_eDistance == DISTANCES.D_200) {
+            optCircle.radius(200 * MI_TO_METER);
+        } else if (_eDistance == DISTANCES.D_150) {
+            optCircle.radius(150 * MI_TO_METER);
+        } else if (_eDistance == DISTANCES.D_100) {
+            optCircle.radius(100 * MI_TO_METER);
+        } else if (_eDistance == DISTANCES.D_50) {
+            optCircle.radius(50 * MI_TO_METER);
+        }
+        optCircle.fillColor(0x2649B5E8);
+        optCircle.strokeWidth(0f);
+        Circle circle = _gmap.addCircle(optCircle);
+
+        MarkerOptions optMarker = new MarkerOptions();
+        optMarker.anchor(0.5f, 0.5f);
+        optMarker.draggable(false);
+        optMarker.position(_currentPosition);
+        optMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_00));
+        _gmap.addMarker(optMarker);
+
+        setCamera();
+    }
+
+    public void setCamera() {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(_currentPosition, 8.2f);
+        switch (_eDistance) {
+            case D_100:
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(_currentPosition, 7.2f);
+                break;
+            case D_150:
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(_currentPosition, 6.6f);
+                break;
+            case D_200:
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(_currentPosition, 6.2f);
+                break;
+        }
+        _gmap.animateCamera(cameraUpdate);
+
+    }
+
+    public void getAllPickups(boolean status) {
+
+        if (status) {
+
         }
     }
 

@@ -71,6 +71,12 @@
     <string name="bs_200_mi">200mi</string>
     <string name="bs_select_pickup_date">Select Pickup Date</string>
 
+    <string name="pk_title">DESIRED PICKUP</string>
+    <string name="pk_button_save">Save</string>
+    <string name="pk_comment_search">Search</string>
+    <string name="pk_comment_select_a_pickup_point">Select a pickup point</string>
+    <string name="pk_button_my_location">My Location</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
