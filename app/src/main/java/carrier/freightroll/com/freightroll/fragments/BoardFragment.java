@@ -1,20 +1,16 @@
 package carrier.freightroll.com.freightroll.fragments;
 
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,7 +27,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,21 +34,28 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import carrier.freightroll.com.freightroll.R;
-import carrier.freightroll.com.freightroll.activities.LoginActivity;
 import carrier.freightroll.com.freightroll.activities.PickupActivity;
-import carrier.freightroll.com.freightroll.activities.TabsNavigationActivity;
+import carrier.freightroll.com.freightroll.api.APIInterface;
+import carrier.freightroll.com.freightroll.api.APIManager;
+import carrier.freightroll.com.freightroll.app.EndPoints;
 import carrier.freightroll.com.freightroll.helpers.PreferenceManager;
+import carrier.freightroll.com.freightroll.models.DISTANCE;
+import carrier.freightroll.com.freightroll.models.TRUCKTYPE;
+import carrier.freightroll.com.freightroll.models.TruckModel;
 
 
 /**
@@ -69,8 +71,8 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     private LinearLayout _btnDate;
     private Dialog _distanceDialog;
     private Dialog _truckDialog;
-    private DISTANCES _eDistance;
-    private TRUCKTYPES _eTruckType;
+    private DISTANCE _eDistance;
+    private TRUCKTYPE _eTruckType;
     private int _iYear;
     private int _iMonth;
     private int _iDay;
@@ -79,6 +81,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     private String _strPosition;
     private LatLng _currentPosition;
     private Switch _btn_pickups;
+    private List<TruckModel> _trucks;
 
     public BoardFragment() {
         // Required empty public constructor
@@ -123,10 +126,10 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         }
         showDate();
 
-        _eDistance = DISTANCES.values()[PreferenceManager.getDistance(getActivity())];
+        _eDistance = DISTANCE.values()[PreferenceManager.getDistance(getActivity())];
         setDistanceText(rootView);
 
-        _eTruckType = TRUCKTYPES.values()[PreferenceManager.getTruck(getActivity())];
+        _eTruckType = TRUCKTYPE.values()[PreferenceManager.getTruck(getActivity())];
         setTruckTypeText(rootView);
 
         _mapView = rootView.findViewById(R.id.mapView);
@@ -145,7 +148,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         _btn_pickups = (Switch) rootView.findViewById(R.id.switch_pickups);
         _btn_pickups.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                getAllPickups(isChecked);
+                changeTrucksState(isChecked);
             }
         });
         return rootView;
@@ -261,28 +264,28 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_50.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDistance(DISTANCES.D_50);
+                setDistance(DISTANCE.D_50);
             }
         });
 
         btn_100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDistance(DISTANCES.D_100);
+                setDistance(DISTANCE.D_100);
             }
         });
 
         btn_150.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDistance(DISTANCES.D_150);
+                setDistance(DISTANCE.D_150);
             }
         });
 
         btn_200.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDistance(DISTANCES.D_200);
+                setDistance(DISTANCE.D_200);
             }
         });
     }
@@ -339,35 +342,35 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         btn_show_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTruckType(TRUCKTYPES.SHOW_ALL);
+                setTruckType(TRUCKTYPE.SHOW_ALL);
             }
         });
 
         btn_flatbed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTruckType(TRUCKTYPES.FLATBED);
+                setTruckType(TRUCKTYPE.FLATBED);
             }
         });
 
         btn_dry_van.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTruckType(TRUCKTYPES.DRY_VAN);
+                setTruckType(TRUCKTYPE.DRY_VAN);
             }
         });
 
         btn_step_deck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTruckType(TRUCKTYPES.STEP_DECK);
+                setTruckType(TRUCKTYPE.STEP_DECK);
             }
         });
 
         btn_ltl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTruckType(TRUCKTYPES.LTL);
+                setTruckType(TRUCKTYPE.LTL);
             }
         });
     }
@@ -381,13 +384,13 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         PreferenceManager.setDate(getActivity(), date);
     }
 
-    public void setDistance(DISTANCES d) {
+    public void setDistance(DISTANCE d) {
         _eDistance = d;
         addMarker();
         _distanceDialog.dismiss();
     }
 
-    public void setTruckType(TRUCKTYPES t) {
+    public void setTruckType(TRUCKTYPE t) {
         _eTruckType = t;
         _truckDialog.dismiss();
     }
@@ -482,13 +485,13 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
 
         CircleOptions optCircle = new CircleOptions();
         optCircle.center(_currentPosition);
-        if (_eDistance == DISTANCES.D_200) {
+        if (_eDistance == DISTANCE.D_200) {
             optCircle.radius(200 * MI_TO_METER);
-        } else if (_eDistance == DISTANCES.D_150) {
+        } else if (_eDistance == DISTANCE.D_150) {
             optCircle.radius(150 * MI_TO_METER);
-        } else if (_eDistance == DISTANCES.D_100) {
+        } else if (_eDistance == DISTANCE.D_100) {
             optCircle.radius(100 * MI_TO_METER);
-        } else if (_eDistance == DISTANCES.D_50) {
+        } else if (_eDistance == DISTANCE.D_50) {
             optCircle.radius(50 * MI_TO_METER);
         }
         optCircle.fillColor(0x2649B5E8);
@@ -522,38 +525,38 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
 
     }
 
-    public void getAllPickups(boolean status) {
+    public void changeTrucksState(boolean status) {
+        getAllTrucks(status);
+    }
+
+    public void getAllTrucks(boolean status) {
+        _trucks = new ArrayList<>();
 
         if (status) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.Theme_AppCompat_DayNight_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Getting Data...");
+            progressDialog.show();
 
-        }
-    }
+            APIManager.get(EndPoints.TRUCK_ALL, null, new APIInterface() {
+                @Override
+                public void onSuccess(JSONObject response) throws JSONException {
+                    progressDialog.dismiss();
+//                    onLoginSuccess(response);
+                }
 
-    private enum TRUCKTYPES {
-        SHOW_ALL(0), FLATBED(1), DRY_VAN(2), STEP_DECK(3), LTL(4);
+                @Override
+                public void onSuccess(JSONArray response) throws JSONException {
+                    progressDialog.dismiss();
+//                    onLoginSuccess(response);
+                }
 
-        private final int _value;
-
-        private TRUCKTYPES(int value) {
-            _value = value;
-        }
-
-        public int getValue() {
-            return _value;
-        }
-    }
-
-    private enum DISTANCES {
-        D_200(0), D_150(1), D_100(2), D_50(3);
-
-        private final int _value;
-
-        private DISTANCES(int value) {
-            _value = value;
-        }
-
-        public int getValue() {
-            return _value;
+                @Override
+                public void onFailure(JSONObject response) throws JSONException {
+                    progressDialog.dismiss();
+//                    onLoginFailed(response.get("errorString").toString());
+                }
+            });
         }
     }
 

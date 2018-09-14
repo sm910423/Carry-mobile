@@ -2,10 +2,8 @@ package carrier.freightroll.com.freightroll.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +12,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -90,11 +89,16 @@ public class LoginActivity extends AppCompatActivity {
         params.put("password", password);
 
         // TODO: Implement your own authentication logic here.
-        APIManager.getDataFromServer(EndPoints.LOGIN, params, new APIInterface() {
+        APIManager.post(EndPoints.LOGIN, params, new APIInterface() {
             @Override
             public void onSuccess(JSONObject response) throws JSONException {
                 progressDialog.dismiss();
                 onLoginSuccess(response);
+            }
+
+            @Override
+            public void onSuccess(JSONArray response) throws JSONException {
+                progressDialog.dismiss();
             }
 
             @Override
