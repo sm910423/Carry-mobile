@@ -20,8 +20,14 @@ import java.text.SimpleDateFormat;
 import carrier.freightroll.com.freightroll.R;
 
 public class ShipmentsAdapter extends RecyclerView.Adapter<ShipmentsAdapter.MyViewHolder> {
+
+    public interface OnItemClickListener {
+        void onItemClick(JSONObject item);
+    }
+
     private JSONArray shipmentsList;
     private TextView fromPlace, toPlace, fromDate, toDate, distance, price;
+    private final OnItemClickListener listener;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         MyViewHolder(View v) {
@@ -33,10 +39,20 @@ public class ShipmentsAdapter extends RecyclerView.Adapter<ShipmentsAdapter.MyVi
             distance = v.findViewById(R.id.txt_distance);
             price = v.findViewById(R.id.txt_price);
         }
+
+        public void bind(final JSONObject item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
     }
 
-    public ShipmentsAdapter(JSONArray shipmentsList) {
+    public ShipmentsAdapter(JSONArray shipmentsList, OnItemClickListener listener) {
         this.shipmentsList = shipmentsList;
+        this.listener = listener;
     }
 
     @Override
@@ -66,6 +82,8 @@ public class ShipmentsAdapter extends RecyclerView.Adapter<ShipmentsAdapter.MyVi
             }
             price.setText(convertCurrency(shipment.getDouble("rate")));
             distance.setText(shipment.getString("distance") + " mi.");
+
+            holder.bind(shipment, listener);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -737,7 +737,12 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
             return;
         }
 
-        _shipmentsAdapter = new ShipmentsAdapter(_showTrucks);
+        _shipmentsAdapter = new ShipmentsAdapter(_showTrucks, new ShipmentsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(JSONObject item) {
+                Log.d("zzz item clicked", item.toString());
+            }
+        });
         RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
         _rv_shipments.setLayoutManager(lm);
         _rv_shipments.setItemAnimator(new DefaultItemAnimator());
