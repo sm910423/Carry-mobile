@@ -70,12 +70,23 @@
     <string name="bs_150_mi">150mi</string>
     <string name="bs_200_mi">200mi</string>
     <string name="bs_select_pickup_date">Select Pickup Date</string>
+    <string name="bs_shipments">Shipments</string>
+    <string name="bs_sort_shipments">Sort Shipements</string>
+    <string name="bs_by_relevance">By Relevance</string>
+    <string name="bs_by_rate">By Rate</string>
+    <string name="bs_by_distance">By Distance</string>
+    <string name="bs_by_pickup_date">By Pickup Date</string>
+    <string name="bs_by_delivery_date">By Delivery Date</string>
+    <string name="bs_comment_drop_pin">Please set your desired pickup location</string>
 
     <string name="pk_title">DESIRED PICKUP</string>
     <string name="pk_button_save">Save</string>
     <string name="pk_comment_search">Search</string>
     <string name="pk_comment_select_a_pickup_point">Select a pickup point</string>
     <string name="pk_button_my_location">My Location</string>
+    <string name="pk_comment_save">Do you want to save this pin?</string>
+    <string name="pk_yes">Yes</string>
+    <string name="pk_no">No</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

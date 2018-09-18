@@ -15,6 +15,7 @@ public class PreferenceManager {
     private static final String PREFERENCE_SETTINGS = "PREFERENCE_SETTINGS";
     private static final String KEY_DISTANCE = "KEY_DISTANCE";
     private static final String KEY_TRUCK = "KEY_TRUCK";
+    private static final String KEY_SORT = "KEY_SORT";
     private static final String KEY_DATE = "KEY_DATE";
     private static final String KEY_POSITION_LAT = "KEY_POSITION_LAT";
     private static final String KEY_POSITION_LNG = "KEY_POSITION_LNG";
@@ -97,6 +98,18 @@ public class PreferenceManager {
         mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(KEY_DATE, date);
+        editor.apply();
+    }
+
+    public static int getSortOption(Context mContext) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        return mSharedPreferences.getInt(KEY_SORT, 0);
+    }
+
+    public static void setSortOption(Context mContext, int option) {
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(KEY_SORT, option);
         editor.apply();
     }
 

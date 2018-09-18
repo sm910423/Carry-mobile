@@ -28,8 +28,8 @@
                 android:layout_width="16dp"
                 android:layout_height="match_parent"
                 android:background="@color/colorTransparent"
-                android:focusable="false"
                 android:clickable="false"
+                android:focusable="false"
                 app:srcCompat="@drawable/arrow_back" />
 
             <Button

@@ -14,7 +14,7 @@ public class TruckModel {
     private PickupModel dropoff;
     private List<AdditionalServiceModel> additional_services;
 
-    TruckModel(int id, TRUCKTYPE truck_type, int distance, int weight, String commodity, float rate, String status, PickupModel pickup, PickupModel dropoff, List<AdditionalServiceModel> additional_services) {
+    public TruckModel(int id, TRUCKTYPE truck_type, int distance, int weight, String commodity, float rate, String status, PickupModel pickup, PickupModel dropoff, List<AdditionalServiceModel> additional_services) {
         this.id = id;
         this.truck_type = truck_type;
         this.distance = distance;

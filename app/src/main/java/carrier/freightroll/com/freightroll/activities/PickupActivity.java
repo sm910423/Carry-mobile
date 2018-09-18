@@ -45,6 +45,7 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
     private MapView _mapView;
     private GoogleMap _gmap;
     private SearchView _searchView;
+    private boolean _isDropped = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,44 +96,9 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         _gmap = googleMap;
-        if (ActivityCompat.checkSelfPermission(PickupActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PickupActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(this)
-                        .setTitle("location")
-                        .setMessage("content")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(PickupActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 99);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 99);
-            }
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                new AlertDialog.Builder(this)
-                        .setTitle("location")
-                        .setMessage("content")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(PickupActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 99);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 99);
-            }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            _gmap.setMyLocationEnabled(true);
         }
-        _gmap.setMyLocationEnabled(true);
         _gmap.setMinZoomPreference(3);
         _gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -206,6 +172,7 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
 
     public boolean searchAddress(String query) {
         if (setPlaceFromString(query)) {
+            _isDropped = true;
             LatLng latLng = new LatLng(_cur_lat, _cur_lng);
             addMarker(latLng);
             showPlace();
@@ -215,6 +182,7 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     public void clickedMap(LatLng latLng) {
+        _isDropped = true;
         _cur_lat = (float)latLng.latitude;
         _cur_lng = (float)latLng.longitude;
 
@@ -303,8 +271,33 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
         _searchView.setIconified(false);
     }
 
-    public void goBack(View v){
-        finish();
+    public void goBack(View v) {
+        if (_isDropped) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setPositiveButton(R.string.pk_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    save(getWindow().getDecorView());
+                }
+            });
+            builder.setNegativeButton(R.string.pk_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            builder.setMessage(getString(R.string.pk_comment_save));
+            AlertDialog dialog = builder.create();
+//            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//
+//                }
+//            });
+            dialog.show();
+        } else {
+            finish();
+        }
     }
 
     public void save(View v) {

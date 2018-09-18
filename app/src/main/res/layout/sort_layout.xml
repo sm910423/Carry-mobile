@@ -10,7 +10,7 @@
         android:layout_height="48dp"
         android:background="@drawable/transparent_bottom_line_2"
         android:gravity="center"
-        android:text="@string/bs_text_selectdeadhead"
+        android:text="@string/bs_sort_shipments"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -20,7 +20,7 @@
         android:layout_height="48dp"
         android:layout_below="@+id/textView16"
         android:background="@drawable/transparent_bottom_line_2"
-        android:text="@string/bs_50_miles"
+        android:text="@string/bs_by_relevance"
         android:textAllCaps="false"
         android:textSize="14sp" />
 
@@ -30,7 +30,7 @@
         android:layout_height="48dp"
         android:layout_below="@+id/btn_relevance"
         android:background="@drawable/transparent_bottom_line_2"
-        android:text="@string/bs_100_miles"
+        android:text="@string/bs_by_rate"
         android:textAllCaps="false"
         android:textSize="14sp" />
 
@@ -40,7 +40,7 @@
         android:layout_height="48dp"
         android:layout_below="@+id/btn_rate"
         android:background="@drawable/transparent_bottom_line_2"
-        android:text="@string/bs_150_miles"
+        android:text="@string/bs_by_distance"
         android:textAllCaps="false"
         android:textSize="14sp" />
 
@@ -50,7 +50,17 @@
         android:layout_height="48dp"
         android:layout_below="@+id/btn_distance"
         android:background="@drawable/transparent_bottom_line_2"
-        android:text="@string/bs_200_miles"
+        android:text="@string/bs_by_pickup_date"
+        android:textAllCaps="false"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_delivery_date"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/btn_pickup_date"
+        android:background="@drawable/transparent_bottom_line_2"
+        android:text="@string/bs_by_delivery_date"
         android:textAllCaps="false"
         android:textSize="14sp" />
 
@@ -58,7 +68,7 @@
         android:id="@+id/btn_cancel"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@+id/btn_pickup_date"
+        android:layout_below="@+id/btn_delivery_date"
         android:background="@color/colorTransparent"
         android:text="@string/bs_text_cancel"
         android:textSize="14sp" />
