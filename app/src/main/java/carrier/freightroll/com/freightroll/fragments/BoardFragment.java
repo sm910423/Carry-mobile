@@ -115,7 +115,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    @Override 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_board, container, false);
