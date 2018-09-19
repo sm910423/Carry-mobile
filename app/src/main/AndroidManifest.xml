@@ -30,13 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.LoginActivity" android:theme="@style/AppTheme.TranslateActionBar" />
-        <activity
-            android:name=".activities.SignupActivity" android:theme="@style/AppTheme.TranslateActionBar" />
-        <activity
-            android:name=".activities.TabsNavigationActivity" android:theme="@style/AppTheme.TranslateActionBar" />
-        <activity android:name=".activities.PickupActivity" android:theme="@style/AppTheme.TranslateActionBar"></activity>
+        <activity android:name=".activities.LoginActivity" android:theme="@style/AppTheme.TranslateActionBar" />
+        <activity android:name=".activities.SignupActivity" android:theme="@style/AppTheme.TranslateActionBar" />
+        <activity android:name=".activities.TabsNavigationActivity" android:theme="@style/AppTheme.TranslateActionBar" />
+        <activity android:name=".activities.PickupActivity" android:theme="@style/AppTheme.TranslateActionBar" />
+        <activity android:name=".activities.ShipmentDetailsActivity" android:theme="@style/AppTheme.TranslateActionBar" ></activity>
     </application>
 
 </manifest>

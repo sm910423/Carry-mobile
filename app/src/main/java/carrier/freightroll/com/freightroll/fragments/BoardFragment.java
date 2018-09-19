@@ -64,6 +64,7 @@ import java.util.TimeZone;
 
 import carrier.freightroll.com.freightroll.R;
 import carrier.freightroll.com.freightroll.activities.PickupActivity;
+import carrier.freightroll.com.freightroll.activities.ShipmentDetailsActivity;
 import carrier.freightroll.com.freightroll.adapters.ShipmentsAdapter;
 import carrier.freightroll.com.freightroll.api.APIInterface;
 import carrier.freightroll.com.freightroll.api.APIManager;
@@ -224,6 +225,7 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
     @Override
     public void onResume() {
         super.onResume();
+        isFirst = true;
         setPosition();
         drawCircle();
         _mapView.onResume();
@@ -640,6 +642,12 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         this.startActivity(intent);
     }
 
+    public void goToShipmentDetailsActivity(JSONObject obj) {
+        Intent intent = new Intent(getActivity(), ShipmentDetailsActivity.class);
+        intent.putExtra("info", obj.toString());
+        this.startActivity(intent);
+    }
+
     public void setPosition() {
         float lat = PreferenceManager.getPositionLat(getActivity());
         float lng = PreferenceManager.getPositionLng(getActivity());
@@ -737,7 +745,12 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
             return;
         }
 
-        _shipmentsAdapter = new ShipmentsAdapter(_showTrucks);
+        _shipmentsAdapter = new ShipmentsAdapter(_showTrucks, new ShipmentsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(JSONObject item) {
+                goToShipmentDetailsActivity(item);
+            }
+        });
         RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
         _rv_shipments.setLayoutManager(lm);
         _rv_shipments.setItemAnimator(new DefaultItemAnimator());
@@ -771,8 +784,6 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
             @Override
             public void onSuccess(JSONArray response) throws JSONException {
                 _trucks = response;
-
-                Log.d("zzz trucks", _trucks.toString());
 
                 if (_trucks.length() <= 0) {
                     progressDialog.dismiss();

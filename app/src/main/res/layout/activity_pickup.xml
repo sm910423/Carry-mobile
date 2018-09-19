@@ -42,6 +42,7 @@
                 android:focusable="false"
                 android:gravity="left|center_vertical"
                 android:text="@string/title_button_back"
+                android:textAllCaps="false"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -59,12 +60,13 @@
             android:id="@+id/htn_save"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:layout_alignEnd="@+id/header_title"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="false"
             android:background="@color/colorTransparent"
             android:gravity="right|center_vertical"
-            android:text="@string/pk_button_save"
             android:onClick="save"
+            android:text="@string/pk_button_save"
+            android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
     </RelativeLayout>

@@ -87,7 +87,30 @@
     <string name="pk_comment_save">Do you want to save this pin?</string>
     <string name="pk_yes">Yes</string>
     <string name="pk_no">No</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <string name="sd_title">Details</string>
+    <string name="sd_rate">Rate</string>
+    <string name="sd_truck_type">Truck Type</string>
+    <string name="sd_weight">Weight</string>
+    <string name="sd_accept_shipment">Accept Shipment</string>
+    <string name="sd_enter_your_bid">Enter Your Bid</string>
+    <string name="sd_pickup_information">Pickup Information</string>
+    <string name="sd_address">Address</string>
+    <string name="sd_appointment">Appointment</string>
+    <string name="sd_date_range">Date Range</string>
+    <string name="sd_shipping_hours">Shipping Hours</string>
+    <string name="sd_pickup_instructions">Pickup Instructions</string>
+    <string name="sd_dropoff_information">Dropoff Information</string>
+    <string name="sd_dropoff_instructions">Dropoff Instructions</string>
+    <string name="sd_accept_load">Accept Load?</string>
+    <string name="sd_shipment_accepted">Shipment Accepted!</string>
+    <string name="sd_yes">Yes</string>
+    <string name="sd_no">No</string>
+    <string name="sd_ok">Ok</string>
+    <string name="sd_comment_enter_bid">Enter your sum below to bid on this shipment.</string>
+    <string name="sd_comment_submitting_bid">Submitting a bid means you agree with our </string>
+    <string name="sd_terms_service">Terms of Service</string>
+    <string name="sd_cancel">Cancel</string>
+    <string name="sd_submit">Submit</string>
+    <string name="bid_entered">Bid Entered:</string>
 </resources>
