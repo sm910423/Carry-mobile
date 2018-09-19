@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 import carrier.freightroll.com.freightroll.R;
+import carrier.freightroll.com.freightroll.helpers.FunctionManager;
 import carrier.freightroll.com.freightroll.helpers.PreferenceManager;
 
 public class PickupActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -210,9 +211,12 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
 //            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
-//            String country = addresses.get(0).getCountryName();
+                String country = addresses.get(0).getCountryName();
 //            String postalCode = addresses.get(0).getPostalCode();
 //            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                if (country.equalsIgnoreCase("United States") || country.equalsIgnoreCase("Canada")) {
+                    state = FunctionManager.getStateCode(addresses.get(0).getAddressLine(0));
+                }
 
                 _cur_lat = (float) addresses.get(0).getLatitude();
                 _cur_lng = (float) addresses.get(0).getLongitude();
@@ -242,9 +246,12 @@ public class PickupActivity extends AppCompatActivity implements OnMapReadyCallb
 //            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
-//            String country = addresses.get(0).getCountryName();
-//            String postalCode = addresses.get(0).getPostalCode();
-//            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                String country = addresses.get(0).getCountryName();
+//                String postalCode = addresses.get(0).getPostalCode();
+//                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                if (country.equalsIgnoreCase("United States") || country.equalsIgnoreCase("Canada")) {
+                    state = FunctionManager.getStateCode(addresses.get(0).getAddressLine(0));
+                }
 
                 if (city != null) {
                     _cur_label = city + "/" + state;

@@ -4,86 +4,94 @@
     android:layout_height="80dp"
     android:background="@drawable/bottom_line_2"
     android:clickable="true"
-    android:paddingTop="8dp">
+    android:paddingTop="4dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/txt_from_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="Dudley, NC"
             android:textColor="@android:color/black" />
 
-        <TextView
-            android:id="@+id/txt_from_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Sep 17 - Sep 18"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
         <ImageView
             android:id="@+id/imageView12"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="false"
             android:src="@drawable/arrow_right_2" />
-
-        <TextView
-            android:id="@+id/txt_distance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:text="329 mi." />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txt_to_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:gravity="right"
             android:text="Ranson, WV"
             android:textColor="@android:color/black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout1"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/txt_from_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Sep 17 - Sep 18"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txt_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="329 mi."
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/txt_to_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="right"
-            android:layout_marginTop="4dp"
             android:gravity="right"
             android:text="Sep 18"
             android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout2"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/txt_price"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="right"
-            android:layout_marginTop="6dp"
             android:background="@drawable/button_round_outline"
             android:gravity="center"
             android:text="$1,200.00"
             android:textColor="@color/colorPrimary"
             android:textSize="12sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

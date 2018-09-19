@@ -9,6 +9,8 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import carrier.freightroll.com.freightroll.R;
 import carrier.freightroll.com.freightroll.models.TRUCKTYPE;
@@ -122,7 +124,7 @@ public class FunctionManager {
         return eType;
     }
 
-    public static String  getMapsApiDirectionsUrl(LatLng origin, LatLng dest) {
+    public static String getMapsApiDirectionsUrl(LatLng origin, LatLng dest) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
@@ -139,5 +141,16 @@ public class FunctionManager {
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=AIzaSyD_Tzoij10Or6sxR9vVAaFpcxFzsQTYawQ";
 
         return url;
+    }
+
+    public static String getStateCode(String address) {
+        String stateCode = "";
+        String[] pattern = address.split(", ");
+        if (pattern.length > 1) {
+            String strZipCode = pattern[pattern.length - 2];
+            String[] codes = strZipCode.split(" ");
+            stateCode = codes[0];
+        }
+        return stateCode;
     }
 }

@@ -228,6 +228,10 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
         isFirst = true;
         setPosition();
         drawCircle();
+        if (_eSortOption == SORTOPTION.RELEVANCE) {
+            sortByOptions();
+            addTruckElements(getView());
+        }
         _mapView.onResume();
     }
 
@@ -488,7 +492,13 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
             @Override
             public void onClick(View v) {
                 if (_currentPosition == null) {
-                    Toast.makeText(getContext(), getString(R.string.bs_comment_drop_pin), Toast.LENGTH_LONG).show();
+                    Toast toast = Toast.makeText(getContext(), getString(R.string.bs_comment_drop_pin), Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    View vv = toast.getView();
+                    vv.setBackgroundResource(R.drawable.dialog_round2);
+                    TextView t = vv.findViewById(android.R.id.message);
+                    t.setTextColor(Color.WHITE);
+                    toast.show();
                     _sortDialog.dismiss();
                     return;
                 }
@@ -1093,9 +1103,9 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
                 e.printStackTrace();
             }
             if (val1 > val2) {
-                return 1;
-            } else if (val1 < val2) {
                 return -1;
+            } else if (val1 < val2) {
+                return 1;
             }
             return 0;
         }
@@ -1113,9 +1123,9 @@ public class BoardFragment extends Fragment implements OnMapReadyCallback, View.
                 e.printStackTrace();
             }
             if (val1 > val2) {
-                return 1;
-            } else if (val1 < val2) {
                 return -1;
+            } else if (val1 < val2) {
+                return 1;
             }
             return 0;
         }
